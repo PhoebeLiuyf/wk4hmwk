@@ -17,11 +17,12 @@ gddf2019 <- gddf %>%
 sf <-read_sf("/Users/xiaoqianmai/Desktop/GIS/week4/hmwk/World_Countries_(Generalized)_2402777631520798174/World_Countries_Generalized.shp")
 #把iso换为3位代码
 library(countrycode)
-sf3<- countrycode(sf$ISO, origin = 'iso2c', destination = 'iso3c')
+sf<- sf %>%
+  mutate(ISO3=countrycode(sf$ISO, origin = 'iso2c', destination = 'iso3c'))
 
 
 gddfw <-gddf %>%
   pivot_wider(.,names_from = "year",values_from = "value" ) %>%
-  left_join(.,sf3,by=c("countryIsoCode"="ISO")) %>%
+  left_join(.,sf,by=c("countryIsoCode"="ISO3")) %>%
   mutate(difference = `2019`-`2010`)
 
